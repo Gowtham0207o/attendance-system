@@ -1,0 +1,17 @@
+# ================================
+# public/.htaccess
+# ================================
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ api/index.php [QSA,L]
+</IfModule>
+
+# Security headers
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-XSS-Protection "1; mode=block"

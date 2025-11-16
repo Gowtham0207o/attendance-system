@@ -1,0 +1,192 @@
+/* ============================
+   DARK THEME VISUAL ENHANCEMENTS
+   ============================ */
+:root {
+  --bg: #0a0a0d;
+  --panel: #1c1c1f;
+  --muted: #9ca3af; /* adjusted brightness */
+  --accent: #00ffc6;
+  --accent2: #ff8e3c;
+}
+
+body.bg-dark {
+  background: var(--bg);
+  color: #e6eaf0;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Panel / Card Styling */
+.card.glass {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.05));
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.card.glass:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Headers and Highlights */
+h5, h6, strong, .fw-bold {
+  color: #f5f6fa;
+}
+
+.text-muted,
+small,
+small.text-muted {
+  color: var(--muted) !important;
+  opacity: 0.85;
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--accent2);
+}
+
+/* Inputs and Buttons */
+input.form-control,
+select.form-select {
+  background: #222;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 8px 10px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+input.form-control:focus,
+select.form-select:focus {
+  border-color: var(--accent);
+  outline: none;
+  background: #262626;
+  box-shadow: 0 0 6px rgba(0, 255, 198, 0.3);
+}
+
+button.btn,
+.btn {
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light {
+  border-color: var(--muted);
+  color: var(--muted);
+}
+
+.btn-outline-light:hover {
+  color: #0a0a0d;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+}
+
+/* Accent Buttons */
+button#exportCsv,
+button#bulkMarkAbsent,
+button#openAddEmp,
+button#createPayrun {
+  background: var(--accent);
+  color: #0b0b0c;
+  border: none;
+}
+
+button#exportCsv:hover,
+button#bulkMarkAbsent:hover,
+button#openAddEmp:hover,
+button#createPayrun:hover {
+  background: var(--accent2);
+  color: #0b0b0c;
+}
+
+/* Calendar & Timeline */
+.fc .fc-toolbar-title {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.timeline {
+  position: relative;
+  padding-left: 28px;
+}
+
+.timeline:before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent), transparent);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--panel);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.3s ease;
+}
+
+.timeline-item:hover {
+  border-color: var(--accent);
+}
+
+/* Small elements like “Live Sync” text */
+div.small.text-muted {
+  color: #b6bdc5 !important;
+}
+
+/* DataTables Head */
+table.dataTable thead th {
+  color: #c2c9d1 !important;
+  font-weight: 600;
+}
+
+/* General improvements */
+select.form-select-sm,
+input.form-control-sm {
+  background: #ffffffff;
+  border-color: #444;
+  color: #e6e6e6;
+}
+
+select.form-select-sm:focus,
+input.form-control-sm:focus {
+  border-color: var(--accent);
+}
+
+/* Scrollbar aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--accent), var(--accent2));
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+}

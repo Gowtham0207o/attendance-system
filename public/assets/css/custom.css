@@ -1,0 +1,19 @@
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+div#ins-absent {
+    color: #fff!important;
+}
+div#ins-present {
+    color: #fff!important;
+}
+div#ins-leave {
+    color: #fff!important;
+}
+
+input, select {
+    background: #222;
+    color: #fff;
+    border: 1px solid #555;
+}
