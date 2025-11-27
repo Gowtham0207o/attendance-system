@@ -29,26 +29,30 @@ function renderEmployees() {
                                 <small class='text-muted'>${emp.role}</small><br>
                                 <small class='text-warning'>₹${parseFloat(emp.salary || 0).toLocaleString()}</small>
                             </div>
-                            <div>
-                                <div class='d-flex gap-2'>
-                                 <div>
-<div class='btn-group btn-group-sm' role='group'>
-    <button class='btn btn-outline-light markPresentEmp' data-id='${emp.id}'>Present</button>
-    <button class='btn btn-outline-light markAbsentEmp' data-id='${emp.id}'>Absent</button>
+                         <div>
+    <div class='d-flex flex-wrap gap-2'>
 
-    <select class='form-select form-select-sm markOthersEmp' data-id='${emp.id}' style="width:auto;">
-        <option value="">Others…</option>
-        <option value="Leave">Leave</option>
-        <option value="Half-day">Half-day</option>
-        <option value="WFH">Work From Home</option>
-        <option value="Holiday">Holiday</option>
-        <option value="Permission">Permission</option>
-    </select>
+        <div class='d-flex flex-wrap gap-2'>
+            <div class='btn-group btn-group-sm' role='group'>
+                <button class='btn btn-outline-light markPresentEmp' data-id='${emp.id}'>Present</button>
+                <button class='btn btn-outline-light markAbsentEmp' data-id='${emp.id}'>Absent</button>
+
+                <select class='form-select form-select-sm btn-outline-light markOthersEmp' data-id='${emp.id}' style="width:auto;">
+                    <option value="">Others…</option>
+                    <option value="Leave">Leave</option>
+                    <option value="Half-day">Half-day</option>
+                    <option value="WFH">WFH</option>
+                    <option value="Holiday">Holiday</option>
+                    <option value="Permission">Permission</option>
+                </select>
+            </div>
+        </div>
+
+        <button class='btn btn-sm btn-outline-light empUpdate' data-id='${emp.id}'>Update</button>
+
+    </div>
 </div>
-                        </div>
-                                    <button class='btn btn-sm btn-outline-light empUpdate' data-id='${emp.id}'>Update</button>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 `);

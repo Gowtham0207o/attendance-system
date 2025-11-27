@@ -100,7 +100,7 @@ $(document).on('submit', '#addLabourForm', function (e) {
                                 <div class='btn-group btn-group-sm' role='group'>
                                     <button class='btn btn-outline-light markPresent' data-id='${l.id}'>Present</button>
                                     <button class='btn btn-outline-light markAbsent' data-id='${l.id}'>Absent</button>
-                                    <button class='btn btn-outline-light markLeave' data-id='${l.id}'>Leave</button>
+                                    <button class='btn btn-outline-light markExtraShift' data-id='${l.id}'>ExtraShift</button>
                                 </div>
                             </div>
                         </div>
@@ -152,15 +152,15 @@ function escapeHtml(s) {
 // -------------------------
 // Event handlers for marking attendance
 // -------------------------
-$(document).on('click', '.markPresent, .markAbsent, .markLeave', function () {
+$(document).on('click', '.markPresent, .markAbsent, .markExtraShift', function () {
     const id = $(this).data('id');
     const projectId = $('#projectSelect').val() || 0;
     console.log(id);
     const status = $(this).hasClass('markPresent')
         ? 'Present'
-        : $(this).hasClass('markAbsent')
-        ? 'Absent'
-        : 'Leave';
+        : $(this).hasClass('markExtraShift')
+        ? 'ExtraShift'
+        : 'Absent';
 
     // Disable the buttons while processing
     const btnGroup = $(this).closest('.btn-group');
@@ -172,7 +172,7 @@ $(document).on('click', '.markPresent, .markAbsent, .markLeave', function () {
             labour_id: id,
             project_id: projectId,
             status: status,
-            shift: 'Day',
+            shift: (status == ExtraShift) ? 'night' : 'day',
         },
         function (res) {
             if (res.success) {
