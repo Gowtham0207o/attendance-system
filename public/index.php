@@ -77,6 +77,12 @@
                         <button class="nav-link" id="payroll-tab" data-bs-toggle="tab" data-bs-target="#payroll" type="button">Payroll</button>
                      </li>
                      <li class="nav-item" role="presentation">
+    <button class="nav-link" id="teams-tab" data-bs-toggle="tab" data-bs-target="#teams" type="button">
+        Teams
+    </button>
+</li>
+
+                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="items-tab" data-bs-toggle="tab" data-bs-target="#additems" type="button">
                         Items
                         </button>
@@ -119,6 +125,7 @@
                            <button class="btn btn-sm btn-outline-light ms-2" id="bulkMarkAbsent">Mark All Present</button>
                         </div>
                      </div>
+                     
                      <!-- Employee Tab -->
                      <div class="tab-pane fade" id="employee">
                         <div class="mb-2 d-flex justify-content-between align-items-center">
@@ -132,6 +139,51 @@
                         </div>
                         <div class="attendance-row" id="employeeList"></div>
                      </div>
+                    <div class="tab-pane fade" id="teams">
+  <div class="mb-2 d-flex justify-content-between align-items-center">
+    <strong>Team Attendance</strong>
+  </div>
+
+  <div class="card glass p-2 mb-2">
+    <div class="row g-2 align-items-end">
+      <div class="col-5">
+        <label class="small text-muted">Team</label>
+        <select id="teamSelect" class="form-select form-select-sm">
+          <option value="">Loading teams…</option>
+        </select>
+      </div>
+
+      <div class="col-3">
+        <label class="small text-muted">Date</label>
+        <input type="date" id="teamDate" class="form-control form-control-sm">
+      </div>
+
+      <div class="col-2">
+        <label class="small text-muted">Shift</label>
+        <select id="teamShift" class="form-select form-select-sm">
+          <option value="day">Day</option>
+          <option value="night">Night</option>
+        </select>
+      </div>
+
+      <div class="col-2 text-end">
+        <button id="reloadTeamSummary" class="btn btn-sm btn-outline-light mt-3">Refresh</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card glass p-2">
+    <div class="small text-muted mb-2">Skill-wise attendance (e.g. Afroz: 3 Mason, 2 Helper, 4 Carpenter)</div>
+    <div id="teamSkillAttendance">
+      <div class="text-muted p-3">Select a team to view skill counts.</div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <button class="btn btn-sm btn-warning" id="saveTeamAttendance">Save Team Attendance</button>
+    </div>
+  </div>
+</div>
+
                      <!-- Payroll Tab -->
                      <div class="tab-pane fade" id="payroll">
                         <div class="mb-2 d-flex justify-content-between align-items-center">
@@ -154,7 +206,7 @@
                      <div class="tab-pane fade" id="additems">
                         <div class="mb-3 d-flex justify-content-between align-items-center">
                            <strong>Project Items</strong>
-                           <div class="btn-group" role="group">
+                           <div class="btn-group d-flex" role="group">
                               <!-- Add Item -->
                               <button class="btn btn-sm btn-outline-light"
                                  data-bs-toggle="modal"
@@ -179,6 +231,13 @@
                                  data-bs-target="#addProjectModal">
                               + Add Project
                               </button>
+                             
+    <button class="btn btn-sm btn-outline-light" 
+            data-bs-toggle="modal"
+            data-bs-target="#addTeamModal">
+        + Add Team
+    </button>
+
                            </div>
                         </div>
                         <div id="itemList" class="mt-2"></div>
@@ -210,6 +269,7 @@
       <?php include 'views/modals/add_employee_modal.php'; ?>
       <?php include 'views/modals/add_labour_modal.php'; ?>
       <?php include 'views/modals/add_project_modal.php'; ?>
+       <?php include 'views/modals/add_team_modal.php'; ?>
       <!-- =======================
          Scripts
          ======================= -->
@@ -276,6 +336,9 @@
       <script src="assets/js/app/payroll.js"></script>
       <script src="assets/js/app/projects.js"></script>
       <script src="assets/js/app/employees.js"></script>
+      <script src="assets/js/app/teams.js"></script>
+
       <script src="assets/js/main.js"></script>
+
    </body>
 </html>

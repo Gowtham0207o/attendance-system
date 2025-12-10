@@ -25,9 +25,7 @@ function renderLabours(filter = '') {
                             <div class='btn-group btn-group-sm' role='group'>
                                 <button class='btn btn-outline-light  markPresent' data-id='${labour.id}'>Present</button>
                                 <button class='btn btn-outline-light  markAbsent' data-id='${labour.id}'>Absent</button>
-                                <button class='btn btn-outline-light  markLeave' data-id='${labour.id}'>Leave</button>
-                            </div>
-                        </div>
+                                  <button class='btn btn-outline-light markExtraShift' data-id='${labour.id}'>ExtraShift</button>
                     </div>
                 </div>
             `);
@@ -44,14 +42,20 @@ $(document).on('submit', '#addLabourForm', function (e) {
     console.log("Form called");
     const $form = $(this);
     const nameInput = $form.find('input[name="name"]');
-    const RemarkOrAddressInput = $form.find('input[name="address"]');
+    const RemarkOrAddressInput = $form.find('textarea[name="address"]');
     const skillInput = $form.find('input[name="skill"]');
     const phoneInput = $form.find('input[name="phone"]');
+ const salaryInput = $form.find('input[name="salary"], input[name="Salary"]');
+    // team_id in HTML -> convert to teamId for payload
+    const teamIdInput = $form.find('input[name="team_id"], select[name="team_id"], input[name="teamId"], select[name="teamId"]');
 
+    console.log(teamIdInput);
     const name = (nameInput.val() || '').trim();
-    const role = (RemarkOrAddressInput.val() || '').trim();
+    const address = (RemarkOrAddressInput.val() || '').trim();
     const skill = (skillInput.val() || '').trim();
     const phone = (phoneInput.val() || '').trim();
+    const salary = (salaryInput.val() || '').trim();
+    const teamId = (teamIdInput.val() || '').trim();
 
     // Basic validation (consistent with employee)
     if (!name) { alert('Please enter labour name'); nameInput.focus(); return; }
@@ -59,13 +63,15 @@ $(document).on('submit', '#addLabourForm', function (e) {
 
     const payload = {
         name: name,
-        role: role,
+        address: address,
         skill: skill,
         phone: phone,
-        username: (name + role).replace(/\s+/g, '')
+        salary: salary,
+        teamId: teamId,
+        username: (name + skill).replace(/\s+/g, '')
  // simple username pattern like employee
     };
-
+console.log("payload:", payload);
     const $btn = $form.find('button[type="submit"]').prop('disabled', true);
 
     function handleResponse(res) {
@@ -89,23 +95,24 @@ $(document).on('submit', '#addLabourForm', function (e) {
             // If backend returned new_labour, append immediately
             if (res.new_labour && $('#labourList').length) {
                 const l = res.new_labour;
-                const item = $(`
-                    <div class='timeline-item glass text-light labour-row' data-id='${l.id}'>
-                        <div class='d-flex justify-content-between align-items-center'>
-                            <div>
-                                <div class='fw-bold'>${escapeHtml(l.name)}</div>
-                                <small class='text-muted'>${escapeHtml(l.role || l.skill || '')}</small>
-                            </div>
-                            <div>
-                                <div class='btn-group btn-group-sm' role='group'>
-                                    <button class='btn btn-outline-light markPresent' data-id='${l.id}'>Present</button>
-                                    <button class='btn btn-outline-light markAbsent' data-id='${l.id}'>Absent</button>
-                                    <button class='btn btn-outline-light markExtraShift' data-id='${l.id}'>ExtraShift</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `);
+           const item = $(`
+    <div class='timeline-item glass text-light labour-row' data-id='${labour.id}'>
+        <div class='d-flex justify-content-between align-items-center'>
+            <div>
+                <div class='fw-bold'>${labour.name}</div>
+                <small class='text-muted'>${labour.role || labour.skill || ''}</small>
+            </div>
+            <div>
+                <div class='btn-group btn-group-sm' role='group'>
+                    <button class='btn btn-outline-light markPresent' data-id='${labour.id}'>Present</button>
+                    <button class='btn btn-outline-light markAbsent' data-id='${labour.id}'>Absent</button>
+                    <button class='btn btn-outline-light markExtraShift' data-id='${labour.id}'>ExtraShift</button>
+                </div>
+            </div>
+        </div>
+    </div>
+`);
+
                 $('#labourList').prepend(item);
             } else {
                 // fallback to re-render for consistency
@@ -117,13 +124,16 @@ $(document).on('submit', '#addLabourForm', function (e) {
             alert(res.message || (res.errors ? res.errors.join(', ') : 'Failed to add labour'));
         }
     }
+console.log("payload:", payload);
 
     // Use ajaxPost helper if present (keeps existing convention)
     if (typeof ajaxPost === 'function') {
+        console.log("payload:", payload);
         ajaxPost('api/labour/add.php', payload, handleResponse);
     } else {
         $.post('api/labour/add.php', payload, handleResponse, 'json')
          .fail(function (xhr) {
+            console.log("payload:", payload);
              console.error('Labour add error', xhr.responseText);
              alert('Server error while adding labour');
              $btn.prop('disabled', false);
@@ -159,7 +169,7 @@ $(document).on('click', '.markPresent, .markAbsent, .markExtraShift', function (
     const status = $(this).hasClass('markPresent')
         ? 'Present'
         : $(this).hasClass('markExtraShift')
-        ? 'ExtraShift'
+        ? 'extra'
         : 'Absent';
 
     // Disable the buttons while processing
@@ -172,7 +182,7 @@ $(document).on('click', '.markPresent, .markAbsent, .markExtraShift', function (
             labour_id: id,
             project_id: projectId,
             status: status,
-            shift: (status == ExtraShift) ? 'night' : 'day',
+            shift: 'day',
         },
         function (res) {
             if (res.success) {

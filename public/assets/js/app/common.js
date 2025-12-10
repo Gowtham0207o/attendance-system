@@ -7,6 +7,7 @@ function showError(message) {
 }
 
 function ajaxPost(url, data, success, error) {
+    console.log(data);
     $.ajax({
         url: url,
         type: 'POST',

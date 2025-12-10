@@ -16,8 +16,6 @@ $(document).ready(function () {
         switch (target) {
             case "#labour":
                 const projectId = $("#projectSelect").val();
-                console.log(projectId);
-                console.log("loaded o=frf");
                 if (projectId) renderLabourByProject(projectId);
                 break;
 

@@ -20,13 +20,34 @@
               placeholder="Labour Name" 
               required>
           </div>
+    <?php
+// at top of view (index.php or included modal file):
+$teamStmt = db()->query("SELECT id, name FROM teams ORDER BY name ASC");
+$teams = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
+<!-- inside Add Labour modal form -->
+<div class="mb-2">
+  <select name="team_id" class="form-select form-select-sm">
+    <option value="">No Team / Unassigned</option>
+    <?php foreach ($teams as $team): ?>
+      <option value="<?= $team['id'] ?>"><?= htmlspecialchars($team['name']) ?></option>
+    <?php endforeach; ?>
+  </select>
+</div>
           <!-- Skill / Role -->
           <div class="mb-2">
             <input 
               class="form-control form-control-sm" 
               name="skill" 
               placeholder="Skill / Role (e.g., Mason, Carpenter)" 
+              required>
+          </div>
+         <div class="mb-2">
+            <input 
+              class="form-control form-control-sm" 
+              name="Salary" 
+              placeholder="Salary (e.g., 500)per day" 
               required>
           </div>
 
