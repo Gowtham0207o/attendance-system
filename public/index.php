@@ -143,7 +143,34 @@
   <div class="mb-2 d-flex justify-content-between align-items-center">
     <strong>Team Attendance</strong>
   </div>
-
+  <div class="d-flex justify-content-between align-items-center mb-2">
+                           <?php
+                              // Fetch projects (formerly sites)
+                              $stmt = db()->prepare("SELECT id, name FROM projects ORDER BY name ASC");
+                              $stmt->execute();
+                              $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                              ?>
+                           <!-- Replace hardcoded site name with dropdown -->
+                           <div class="d-inline justify-content-between align-items-center mb-2">
+                              <div>
+                                 <strong>Site: </strong>
+                                 <select id="projectSelect" class="form-select form-select-sm">
+                                    <?php foreach($projects as $project): ?>
+                                    <option value="<?= $project['id'] ?>"><?= htmlspecialchars($project['name'])?></option>
+                                    <?php endforeach; ?>
+                                 </select>
+                              </div>
+                           </div>
+                           </strong>
+                           <div>
+                              <button class="btn btn-sm btn-outline-light" 
+                                 id="createProject"
+                                 data-bs-toggle="modal"
+                                 data-bs-target="#addTeamModal">
+                              + Add new Team
+                              </button>
+                           </div>
+                        </div>
   <div class="card glass p-2 mb-2">
     <div class="row g-2 align-items-end">
       <div class="col-5">
@@ -177,8 +204,14 @@
     <div id="teamSkillAttendance">
       <div class="text-muted p-3">Select a team to view skill counts.</div>
     </div>
+<!-- replace existing export button or add new -->
 
     <div class="d-flex justify-content-end mt-3">
+      <button class="btn btn-sm btn-outline-light" id="exportTeamBtn" data-bs-toggle="modal" data-bs-target="#exportTeamModal">
+  Export Team Attendance
+</button>
+
+      &nbsp;
       <button class="btn btn-sm btn-warning" id="saveTeamAttendance">Save Team Attendance</button>
     </div>
   </div>
@@ -202,48 +235,62 @@
                            <tbody></tbody>
                         </table>
                      </div>
-                     <!-- ⭐ ITEMS TAB -->
-                     <div class="tab-pane fade" id="additems">
-                        <div class="mb-3 d-flex justify-content-between align-items-center">
-                           <strong>Project Items</strong>
-                           <div class="btn-group d-flex" role="group">
-                              <!-- Add Item -->
-                              <button class="btn btn-sm btn-outline-light"
-                                 data-bs-toggle="modal"
-                                 data-bs-target="#addItemModal">
-                              + Add Item
-                              </button>
-                              <!-- Add Labour -->
-                              <button class="btn btn-sm btn-outline-light"
-                                 data-bs-toggle="modal"
-                                 data-bs-target="#addLabourModal">
-                              + Add Labour
-                              </button>
-                              <!-- Add Employee -->
-                              <button class="btn btn-sm btn-outline-light"
-                                 data-bs-toggle="modal"
-                                 data-bs-target="#addEmpModal">
-                              + Add Employee
-                              </button>
-                              <!-- Add Project -->
-                              <button class="btn btn-sm btn-outline-light"
-                                 data-bs-toggle="modal"
-                                 data-bs-target="#addProjectModal">
-                              + Add Project
-                              </button>
-                             
-    <button class="btn btn-sm btn-outline-light" 
-            data-bs-toggle="modal"
-            data-bs-target="#addTeamModal">
-        + Add Team
-    </button>
+      <!-- ⭐ ITEMS TAB -->
+<div class="tab-pane fade" id="additems">
 
-                           </div>
-                        </div>
-                        <div id="itemList" class="mt-2"></div>
-                     </div>
-                  </div>
-               </div>
+  <!-- Header -->
+  <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+    <strong>Project Items</strong>
+
+    <!-- Actions -->
+    <div class="d-flex flex-wrap gap-2">
+      <button class="btn btn-sm btn-outline-light"
+              data-bs-toggle="modal"
+              data-bs-target="#addItemModal">
+        + Item
+      </button>
+
+      <button class="btn btn-sm btn-outline-light"
+              data-bs-toggle="modal"
+              data-bs-target="#addLabourModal">
+        + Labour
+      </button>
+
+      <button class="btn btn-sm btn-outline-light"
+              data-bs-toggle="modal"
+              data-bs-target="#addEmpModal">
+        + Employee
+      </button>
+
+      <button class="btn btn-sm btn-outline-light"
+              data-bs-toggle="modal"
+              data-bs-target="#addProjectModal">
+        + Project
+      </button>
+
+      <button class="btn btn-sm btn-outline-light"
+              data-bs-toggle="modal"
+              data-bs-target="#addTeamModal">
+        + Team
+      </button>
+
+    <button
+  type="button"
+  class="btn btn-sm btn-outline-light"
+  data-bs-toggle="modal"
+  data-bs-target="#addPaymentModal"
+>
+  + Add Payment
+</button>
+
+    </div>
+  </div>
+
+  <!-- Items List -->
+  <div id="itemList" class="mt-2"></div>
+
+</div>
+
                <div class="card glass p-3 mt-3">
                   <div class="d-flex justify-content-between align-items-center">
                      <div>
@@ -268,8 +315,10 @@
       <!-- Modals -->
       <?php include 'views/modals/add_employee_modal.php'; ?>
       <?php include 'views/modals/add_labour_modal.php'; ?>
+        <?php include 'views/modals/add_payment_modal.php'; ?>
       <?php include 'views/modals/add_project_modal.php'; ?>
        <?php include 'views/modals/add_team_modal.php'; ?>
+       <?php include 'views/modals/export_team_modal.php'; ?>
       <!-- =======================
          Scripts
          ======================= -->
@@ -337,7 +386,7 @@
       <script src="assets/js/app/projects.js"></script>
       <script src="assets/js/app/employees.js"></script>
       <script src="assets/js/app/teams.js"></script>
-
+<script src="assets/js/app/team_payments.js"></script>
       <script src="assets/js/main.js"></script>
 
    </body>

@@ -70,6 +70,7 @@
         const teamId = $('#teamSelect').val();
         const date = $('#teamDate').val();
         const shift = $('#teamShift').val();
+         const projectId = $('#projectSelect').val();
 
         if ($container.length === 0) return;
 
@@ -133,62 +134,93 @@
             $container.html(html);
         });
     }
+    let selectedProjectId = null;
+$(document).on('change', '#projectSelect', function () {
+    selectedProjectId = $(this).val();
+    console.log('📌 Project changed:', selectedProjectId);
+});
 
     // -------------------------
     // Save team attendance (writes to team_skill_attendance)
     // -------------------------
-    function saveTeamAttendance() {
-        const teamId = $('#teamSelect').val();
-        const date = $('#teamDate').val();
-        const shift = $('#teamShift').val();
-        const $inputs = $('#teamSkillAttendance .teamWorkingInput');
+function saveTeamAttendance() {
+    const teamId    = $('#teamSelect').val();
+    const date      = $('#teamDate').val();
+    const shift     = $('#teamShift').val();
+    const projectId = selectedProjectId || $('#projectSelect').val();
+    const $inputs   = $('#teamSkillAttendance .teamWorkingInput');
 
-        if (!teamId) {
-            alert('Please select a team.');
-            return;
-        }
-        if (!date) {
-            alert('Please select date.');
-            return;
-        }
-
-        const items = [];
-        $inputs.each(function () {
-            const skill = $(this).data('skill');
-            let val = parseInt($(this).val(), 10);
-            if (isNaN(val) || val < 0) val = 0;
-            items.push({
-                skill: skill,
-                working_count: val
-            });
-        });
-
-        if (items.length === 0) {
-            alert('No skills found to save.');
-            return;
-        }
-
-        const payload = {
-            team_id: teamId,
-            date: date,
-            shift: shift,
-            items: JSON.stringify(items)
-        };
-
-        $('#saveTeamAttendance').prop('disabled', true).text('Saving…');
-
-        _ajaxPost('api/team/mark_attendance.php', payload, function (res) {
-            $('#saveTeamAttendance').prop('disabled', false).text('Save Team Attendance');
-
-            if (!res || !res.success) {
-                alert(res && res.message ? res.message : 'Failed to save team attendance.');
-                return;
-            }
-
-            showToast('Team attendance saved');
-            loadTeamSummary(); // refresh
-        });
+    if (!projectId) {
+        alert('Please select a project.');
+        return;
     }
+
+    if (!teamId) {
+        alert('Please select a team.');
+        return;
+    }
+
+    if (!date) {
+        alert('Please select date.');
+        return;
+    }
+
+    const items = [];
+    $inputs.each(function () {
+        const skill = $(this).data('skill');
+        let val = parseInt($(this).val(), 10);
+        if (isNaN(val) || val < 0) val = 0;
+
+        items.push({
+            skill: skill,
+            working_count: val
+        });
+    });
+
+    if (items.length === 0) {
+        alert('No skills found to save.');
+        return;
+    }
+
+    const payload = {
+        project_id: projectId,
+        team_id: teamId,
+        date: date,
+        shift: shift,
+        items: items
+    };
+
+    console.log('📦 Saving team attendance payload:', payload);
+
+    $('#saveTeamAttendance').prop('disabled', true).text('Saving…');
+
+    _ajaxPost('api/team/mark_attendance.php', payload, function (res) {
+        $('#saveTeamAttendance').prop('disabled', false).text('Save Team Attendance');
+
+        if (!res || !res.success) {
+            alert(res && res.message ? res.message : 'Failed to save team attendance.');
+            return;
+        }
+
+        showToast('Team attendance saved');
+        loadTeamSummary();
+    });
+}
+
+// function loadPaymentTeams() {
+//     const $sel = $('#paymentTeamSelect');
+//     $sel.html('<option>Loading…</option>');
+
+//     $.getJSON('api/team/list.php', function (res) {
+//         $sel.empty().append('<option value="">Select Team</option>');
+//         if (res.success && res.data.length) {
+//             res.data.forEach(t => {
+//                 $sel.append(`<option value="${t.id}">${t.name}</option>`);
+//             });
+//         }
+//     });
+// }
+
 
     // =========================
     // Add Team functionality
@@ -241,6 +273,35 @@
             showToast('Team added successfully');
         });
     });
+    function loadPendingAmount() {
+    const projectId = $('#paymentProjectSelect').val();
+    const teamId    = $('#paymentTeamSelect').val();
+
+    if (!projectId || !teamId) {
+        $('#pendingAmountInput').val('₹ 0.00');
+        return;
+    }
+
+    $.getJSON('api/team/pending_amount.php', {
+        project_id: projectId,
+        team_id: teamId
+    }, function (res) {
+        if (!res.success) {
+            $('#pendingAmountInput').val('₹ 0.00');
+            return;
+        }
+
+        $('#pendingAmountInput').val(
+            '₹ ' + res.pending.toLocaleString('en-IN', {
+                minimumFractionDigits: 2
+            })
+        );
+    });
+}
+$(document).on('change', '#paymentProjectSelect, #paymentTeamSelect', function () {
+    loadPendingAmount();
+});
+
     // -------------------------
     // Wire events
     // -------------------------

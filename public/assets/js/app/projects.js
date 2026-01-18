@@ -58,6 +58,20 @@ $(document).ready(function () {
 
 });
 // Define global loader
+function loadPaymentProjects() {
+    const $sel = $('#paymentProjectSelect');
+    $sel.html('<option>Loading…</option>');
+
+    $.getJSON('api/project/list.php', function (res) {
+        $sel.empty().append('<option value="">Select Project</option>');
+        if (res.success && res.data.length) {
+            res.data.forEach(p => {
+                $sel.append(`<option value="${p.id}">${p.name}</option>`);
+            });
+        }
+    });
+}
+
 function loadProjects() {
     $.ajax({
         url: 'api/project/list.php',

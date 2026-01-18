@@ -17,6 +17,17 @@ $phone    = trim($data['phone'] ?? '');
 $teamId   = trim($data['teamId'] ?? $data['team_id'] ?? $data['team'] ?? '');
 $salary   = trim($data['salary'] ?? $data['Salary'] ?? '');
 
+// Normalize team id: accept null / empty
+// $teamId = null;
+// if ($teamRaw !== '' && $teamRaw !== null) {
+//     // if it's numeric-like, cast to int, otherwise null
+//     if (is_numeric($teamRaw)) {
+//         $teamId = (int)$teamRaw;
+//     } else {
+//         // allow string team names? if not, set null
+//         $teamId = null;
+//     }
+// }
 $errors = [];
 
 // Basic validation - change required fields as you need

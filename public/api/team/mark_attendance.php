@@ -14,12 +14,15 @@ $teamId = isset($data['team_id']) ? (int)$data['team_id'] : 0;
 $date   = $data['date'] ?? date('Y-m-d');
 $shift  = $data['shift'] ?? 'day';
 $items  = $data['items'] ?? '[]';
-
+$projectId = isset($data['project_id']) ? (int)$data['project_id'] : 0;
 if ($teamId <= 0) {
     echo json_encode(['success' => false, 'message' => 'team_id is required']);
     exit;
 }
-
+if ($projectId <= 0) {
+    echo json_encode(['success' => false, 'message' => 'project_id is required Not received from js']);
+    exit;
+}
 if (is_string($items)) {
     $items = json_decode($items, true);
 }
@@ -36,8 +39,8 @@ try {
     $perSkill = [];
 
     $sqlUpsert = "
-        INSERT INTO team_skill_attendance (team_id, date, shift, skill, working_count, created_at, updated_at)
-        VALUES (:team_id, :date, :shift, :skill, :working_count, NOW(), NOW())
+        INSERT INTO team_skill_attendance (team_id, project_id, date, shift, skill, working_count, created_at, updated_at)
+        VALUES (:team_id,:project_id , :date, :shift, :skill, :working_count, NOW(), NOW())
         ON DUPLICATE KEY UPDATE
             working_count = VALUES(working_count),
             updated_at    = NOW()
@@ -52,6 +55,7 @@ try {
 
         $stmt->execute([
             ':team_id'        => $teamId,
+            ':project_id' => $projectId,
             ':date'           => $date,
             ':shift'          => $shift,
             ':skill'          => $skill,
